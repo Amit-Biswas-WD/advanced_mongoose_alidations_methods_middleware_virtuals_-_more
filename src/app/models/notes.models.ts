@@ -18,6 +18,12 @@ const NoteSchema = new Schema<INotes>(
       level: { type: String, required: true },
       color: { type: String, default: "Black" },
     },
+    user: {
+      // referencing
+      type: Schema.Types.ObjectId,
+      ref: "User", // jar sathe reference hote tar model er nam
+      required: true,
+    },
   },
   {
     versionKey: false,

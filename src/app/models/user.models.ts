@@ -76,4 +76,4 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
-export const User = model<IUser>("User", UserSchema);
+export const User = model<IUser>("User", UserSchema); // model er nam use korte hobe ref: e (example: User)
