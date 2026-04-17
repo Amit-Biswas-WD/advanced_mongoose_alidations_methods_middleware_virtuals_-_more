@@ -16,10 +16,31 @@ const CreateUserZodSchema = z.object({
 // create a user
 usersRoutes.post("/create-user", async (req: Request, res: Response) => {
   try {
-    const zodBody = await CreateUserZodSchema.parseAsync(req.body);
+    // const zodBody = await CreateUserZodSchema.parseAsync(req.body);
     // console.log(zodBody, "zod body");
 
     const body = req.body;
+
+    // const password = await bcrypt.hash(String(body.password), 10);
+    // console.log(password);
+
+    //-------------
+
+    // // build it and custom instance method
+    // const user = new User(body);
+    // const password = await user.hasPassword(body.password);
+    // console.log(password, "instance");
+    // user.password = password;
+    // await user.save();
+
+    //-------------
+
+    // build in and custom static method
+
+    const hashed = await User.hasPassword(body.password);
+    console.log(hashed, "static");
+
+    body.password = hashed;
 
     const user = await User.create(body);
 

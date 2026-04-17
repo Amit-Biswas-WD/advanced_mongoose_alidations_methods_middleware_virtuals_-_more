@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export interface IAddress {
   city: string;
   street: string;
@@ -9,7 +11,17 @@ export interface IUser {
   lastName: string;
   email: string;
   age: number;
-  password: number;
+  password: string;
   role: "USER" | "ADMIN" | "SUPER_ADMIN";
   address: IAddress;
+}
+
+// build it custom instance method
+export interface UserInstanceMethod {
+  hasPassword(plainPassword: string): Promise<string>;
+}
+
+// built in custom static method
+export interface UserStaticMethods extends Model<IUser> {
+  hasPassword(plainPassword: string): Promise<string>;
 }

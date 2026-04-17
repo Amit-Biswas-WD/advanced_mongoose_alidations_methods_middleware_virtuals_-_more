@@ -1,6 +1,12 @@
-import { model, Schema } from "mongoose";
-import { IAddress, IUser } from "../interfaces/user.interface";
+import { Model, model, Schema } from "mongoose";
+import {
+  IAddress,
+  IUser,
+  UserInstanceMethod,
+  UserStaticMethods,
+} from "../interfaces/user.interface";
 import validator from "validator";
+import bcrypt from "bcryptjs";
 
 const AddressSchema = new Schema<IAddress>(
   {
@@ -13,7 +19,8 @@ const AddressSchema = new Schema<IAddress>(
   },
 );
 
-const UserSchema = new Schema<IUser>(
+// const UserSchema = new Schema<IUser, Model<IUser, {}, UserInstanceMethod>, UserInstanceMethod>( // instance method
+const UserSchema = new Schema<IUser, UserStaticMethods, UserInstanceMethod>( // static method
   {
     firstName: {
       type: String,
@@ -56,7 +63,7 @@ const UserSchema = new Schema<IUser>(
       max: 28,
     },
     password: {
-      type: Number,
+      type: String,
       required: true,
     },
     role: {
@@ -76,4 +83,23 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
-export const User = model<IUser>("User", UserSchema); // model er nam use korte hobe ref: e (example: User)
+// instance method
+UserSchema.method("hasPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(String(plainPassword), 10);
+  return password;
+});
+
+// static method
+UserSchema.static("hasPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(String(plainPassword), 10);
+  return password;
+});
+
+// // instance
+// export const User = model<IUser, Model<IUser, {}, UserInstanceMethod>>(
+//   "User",
+//   UserSchema,
+// ); // model er nam use korte hobe ref: e (example: User)
+
+// static
+export const User = model<IUser, UserStaticMethods>("User", UserSchema);
